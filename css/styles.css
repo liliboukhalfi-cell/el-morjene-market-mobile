@@ -803,37 +803,4 @@ footer .tagline {
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  html, body {
-    background: #1A1A1A;
-    color: #E0E0E0;
-  }
-
-  nav {
-    background: rgba(26, 26, 26, 0.95);
-  }
-
-  .nav-logo {
-    color: #E0E0E0;
-  }
-
-  section {
-    background: #1A1A1A;
-  }
-
-  .carousel-item,
-  .product-card,
-  .detail-image,
-  .cart-item,
-  .cart-summary {
-    background: #2A2A2A;
-    border-color: rgba(196, 87, 26, 0.2);
-  }
-
-  .carousel-info p,
-  .detail-desc,
-  .product-tagline,
-  .cart-item-detail {
-    color: #A0A0A0;
-  }
-}
+/* Dark mode disabled - keep light theme always */
