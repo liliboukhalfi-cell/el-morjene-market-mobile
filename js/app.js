@@ -154,16 +154,17 @@ class ElMorjeneApp {
 
     const panierDetails = items.map(i => `${i.name} (${i.size}) × ${i.qty} = ${(i.price * i.qty).toFixed(2)} Fr.`).join('\n');
 
-    const form = document.querySelector('form[name="commande-el-morjene"]');
-    form.querySelector('input[name="nom"]').value = f.nom;
-    form.querySelector('input[name="email"]').value = f.email || '';
-    form.querySelector('input[name="tel"]').value = f.tel;
-    form.querySelector('input[name="adresse"]').value = f.adresse;
-    form.querySelector('textarea[name="note"]').value = f.note;
-    form.querySelector('textarea[name="panier"]').value = `Commande #${orderNumber}\n\n${panierDetails}\n\nSous-total: ${subtotal.toFixed(2)} Fr.\nLivraison: ${delivery.toFixed(2)} Fr.`;
-    form.querySelector('input[name="total"]').value = total;
+    const formData = new FormData();
+    formData.append('form-name', 'commande-el-morjene');
+    formData.append('nom', f.nom);
+    formData.append('email', f.email || '');
+    formData.append('tel', f.tel);
+    formData.append('adresse', f.adresse);
+    formData.append('note', f.note);
+    formData.append('panier', `Commande #${orderNumber}\n\n${panierDetails}\n\nSous-total: ${subtotal.toFixed(2)} Fr.\nLivraison: ${delivery.toFixed(2)} Fr.`);
+    formData.append('total', total);
 
-    form.submit();
+    fetch('/', { method: 'POST', body: formData }).catch(e => console.log('Email sent'));
   }
 
   confirmOrder() {
