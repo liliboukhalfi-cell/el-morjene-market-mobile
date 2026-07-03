@@ -155,16 +155,18 @@ class ElMorjeneApp {
     const panierDetails = items.map(i => `${i.name} (${i.size}) × ${i.qty} = ${(i.price * i.qty).toFixed(2)} Fr.`).join('\n');
 
     const formData = new FormData();
-    formData.append('form-name', 'commande-el-morjene');
-    formData.append('nom', f.nom);
-    formData.append('email', f.email || '');
-    formData.append('tel', f.tel);
-    formData.append('adresse', f.adresse);
-    formData.append('note', f.note);
-    formData.append('panier', `Commande #${orderNumber}\n\n${panierDetails}\n\nSous-total: ${subtotal.toFixed(2)} Fr.\nLivraison: ${delivery.toFixed(2)} Fr.`);
-    formData.append('total', total);
+    formData.append('Commande #', orderNumber);
+    formData.append('Nom', f.nom);
+    formData.append('Email', f.email);
+    formData.append('Téléphone', f.tel);
+    formData.append('Adresse', f.adresse);
+    formData.append('Note', f.note);
+    formData.append('Produits', panierDetails);
+    formData.append('Sous-total', subtotal.toFixed(2) + ' Fr.');
+    formData.append('Livraison', delivery.toFixed(2) + ' Fr.');
+    formData.append('Total', total + ' Fr.');
 
-    fetch('/', { method: 'POST', body: formData }).catch(e => console.log('Email sent'));
+    fetch('https://formsubmit.co/liliboukhalfi@gmail.com', { method: 'POST', body: formData }).catch(e => {});
   }
 
   confirmOrder() {
