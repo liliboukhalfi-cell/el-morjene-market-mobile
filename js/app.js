@@ -7,7 +7,7 @@ class ElMorjeneApp {
       selectedSize: '700g',
       justAdded: false,
       catalogFilter: 'tous',
-      checkoutForm: { nom: '', adresse: '', tel: '', note: '' },
+      checkoutForm: { nom: '', email: '', adresse: '', tel: '', note: '' },
       orderConfirmed: false,
       orderNumber: '',
       selectedProduct: null,
@@ -144,7 +144,30 @@ class ElMorjeneApp {
     this.render();
   }
 
+  submitOrder() {
+    const f = this.state.checkoutForm;
+    const items = this.state.cart;
+    const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
+    const delivery = items.reduce((s, i) => s + i.qty, 0) * 0.5;
+    const total = (subtotal + delivery).toFixed(2);
+    const orderNumber = 'EM-' + Date.now().toString().slice(-6);
+
+    const panierDetails = items.map(i => `${i.name} (${i.size}) × ${i.qty} = ${(i.price * i.qty).toFixed(2)} Fr.`).join('\n');
+
+    const form = document.querySelector('form[name="commande-el-morjene"]');
+    form.querySelector('input[name="nom"]').value = f.nom;
+    form.querySelector('input[name="email"]').value = f.email || '';
+    form.querySelector('input[name="tel"]').value = f.tel;
+    form.querySelector('input[name="adresse"]').value = f.adresse;
+    form.querySelector('textarea[name="note"]').value = f.note;
+    form.querySelector('textarea[name="panier"]').value = `Commande #${orderNumber}\n\n${panierDetails}\n\nSous-total: ${subtotal.toFixed(2)} Fr.\nLivraison: ${delivery.toFixed(2)} Fr.`;
+    form.querySelector('input[name="total"]').value = total;
+
+    form.submit();
+  }
+
   confirmOrder() {
+    this.submitOrder();
     const orderNumber = 'EM-' + Date.now().toString().slice(-6);
     this.setState({ orderConfirmed: true, orderNumber });
   }
@@ -433,7 +456,7 @@ class ElMorjeneApp {
           <h1 class="detail-title">Commande confirmée !</h1>
           <p style="color:rgba(44,26,14,0.55);margin:12px 0;font-size:13px;">Numéro : <strong style="color:#C4571A;">${this.state.orderNumber}</strong></p>
           <p style="color:rgba(44,26,14,0.55);margin-bottom:24px;font-size:13px;">Nous vous contacterons sur WhatsApp.</p>
-          <button class="hero-btn" onclick="app.setState({page:'home',cart:[],orderConfirmed:false,orderNumber:'',checkoutForm:{nom:'',adresse:'',tel:'',note:''}})">Retour à l'accueil</button>
+          <button class="hero-btn" onclick="app.setState({page:'home',cart:[],orderConfirmed:false,orderNumber:'',checkoutForm:{nom:'',email:'',adresse:'',tel:'',note:''}})">Retour à l'accueil</button>
         </section>
       `;
     }
@@ -447,6 +470,11 @@ class ElMorjeneApp {
         <div style="margin-bottom:20px;">
           <label style="font-size:11px;font-weight:700;display:block;margin-bottom:8px;">Nom *</label>
           <input type="text" placeholder="Karim Benali" value="${form.nom}" onchange="app.updateCheckoutForm('nom', this.value)" style="width:100%;padding:12px;background:#FFFAF3;border:1.5px solid rgba(196,87,26,0.2);border-radius:10px;font-size:13px;outline:none;">
+        </div>
+
+        <div style="margin-bottom:20px;">
+          <label style="font-size:11px;font-weight:700;display:block;margin-bottom:8px;">Email</label>
+          <input type="email" placeholder="karim@example.com" value="${form.email}" onchange="app.updateCheckoutForm('email', this.value)" style="width:100%;padding:12px;background:#FFFAF3;border:1.5px solid rgba(196,87,26,0.2);border-radius:10px;font-size:13px;outline:none;">
         </div>
 
         <div style="margin-bottom:20px;">
